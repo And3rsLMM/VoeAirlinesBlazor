@@ -3,7 +3,8 @@
 @using Newtonsoft.Json;
 @using Data;
 
-<div hidden="@hidediv">
+
+<div hidden="@login">
     <div class="col-3">
         Usuário:<input type="text" class="form-control" id="inputUser" @bind-value="@inputUser" placeholder="">
     </div>
@@ -11,33 +12,52 @@
         Senha:<input type="password" class="form-control" id="inputPassword" @bind-value="@inputPassword" placeholder="">
     </div>
     <div class="col-3" style="margin-top:10px;">
-        <button type="submit" @onclick="Acessar" class="btn btn-primary mb-6">confirmar acesso</button>
+        <button type="submit" @onclick="Acessar" class="btn btn-primary mb-6">Confirmar acesso</button>
     </div>
 </div>
 
-
-@if(acesso){
-    
-    hidediv = true;
-    <p style="margin-top:25px;">Seja bem vindo:@inputUser</p>
-    <p>Você tem a funcionalidade habilitada de:  <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Lista de Usuarios
-            </NavLink> </p>
+@if(acesso == 1 || loginStatus == 1){    
+    <div hidden="@logedin">
+        <p style="margin-top:25px;">Seja bem vindo:@inputUser</p>
+        <p>Você tem a funcionalidade habilitada de:  <NavLink class="nav-link" href="fetchdata">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Lista de Usuarios
+                </NavLink> </p>
+        <div class="col-3" style="margin-top:10px;">
+            <button type="button" @onclick="Sair" class="btn btn-primary mb-6">Sair</button>
+        </div>
+    </div>
 }
+
 @code{
-    bool loginStatus=false;
+    int? loginStatus;
     string inputUser { get; set; } = string.Empty;
     string inputPassword { get; set; } = string.Empty;
-    bool acesso = false;
-    bool hidediv = false;
+    int? acesso;
+    bool login = false;
+    bool logedin = true;
     List<Login>? Users;
     protected override async Task OnInitializedAsync()
     {
-        var result = await ProtectedSessionStore.GetAsync<bool>("loginStatus");
+        var result = await ProtectedSessionStore.GetAsync<int>("loginStatus");
         loginStatus = result.Success ? result.Value : acesso;
+        if(loginStatus == 1)
+        {
+            HideLogin();
+        }else{
+            ShowLogin();
+        }
+    }
+
+    private async Task Sair()
+    {
+        acesso = 0;
+        await ProtectedSessionStore.SetAsync("loginStatus", acesso);
+        var result = await ProtectedSessionStore.GetAsync<int>("loginStatus");
+        loginStatus = result.Success ? result.Value : acesso;
+        ShowLogin();
     }
     
-    private async void Acessar()
+    private async Task Acessar()
     {
         var apiName = "http://mrd34dpooly-001-site1.ftempurl.com/api/login";
         var httpResponse = await client.GetAsync(apiName);
@@ -52,10 +72,21 @@
         {
             if(user.Usuario == inputUser)
             {
-                acesso = true;
+                acesso = 1;
+                var result = await ProtectedSessionStore.GetAsync<int>("loginStatus");
+                loginStatus = result.Success ? result.Value : acesso;
                 await ProtectedSessionStore.SetAsync("loginStatus", acesso);
-            } 
-            
+                HideLogin();
+            }            
         }
+    }
+
+    void HideLogin(){
+        login = true;
+        logedin = false;
+    }
+    void ShowLogin(){
+        login = false;
+        logedin = true;
     }
 }

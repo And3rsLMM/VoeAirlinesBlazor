@@ -5,17 +5,18 @@ namespace VoeAirlinesBlazor.Data
 {
     public class Login
     {
-        [JsonProperty("Usuario")]
+        private DateTime dataCriacao;
 
+        [JsonProperty("Usuario")]
         public string? Usuario { get; set; }
 
         [JsonProperty("DataCriacao")]
+        public DateTime DataCriacao { get ; set; }
 
-        public DateTime DataCriacao { get; set; }
+        [JsonProperty("DataAtual")]
+        public DateTime DataAtual { get; set; } = DateTime.Now;
 
         [JsonProperty("Senha")]
-
         public string? Senha { get; set; }
-
     }
 }
