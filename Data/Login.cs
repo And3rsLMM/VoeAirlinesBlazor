@@ -5,7 +5,8 @@ namespace VoeAirlinesBlazor.Data
 {
     public class Login
     {
-        private DateTime dataCriacao;
+        [JsonProperty("Id")]
+        public int Id { get; set; }
 
         [JsonProperty("Usuario")]
         public string? Usuario { get; set; }

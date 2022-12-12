@@ -1,6 +1,5 @@
 ﻿@page "/fetchdata"
 @inject HttpClient client
-
 @using Newtonsoft.Json
 @using Data
 
@@ -15,7 +14,7 @@
         Senha:<input type="password" class="form-control" id="inputPassword" @bind-value="@adduser.Senha">
     </div>
     <div class="col-3">
-        Data de cadastro:<input type="datetime" class="form-control" id="dataCriacao" @bind-value="adduser.DataAtual" readonly/>
+        Data de cadastro:<input type="datetime" class="form-control" id="dataCriacao" @bind-value="@adduser.DataAtual" readonly/>
     </div>
     <div class="col-3" style="margin-top:10px;">
         <button type="submit" @onclick="CadastrarUsuario" @onclick:preventDefault
@@ -43,9 +42,10 @@
                         <tr>
                             <td>@user.Usuario</td>
                             <td>@user.DataCriacao</td>
-                            <td>
-                                <a href="fetchdata/@user.Usuario">Editar</a>
-                            </td>
+                            <td><button type="button" @onclick="()=>UpdateUser()"
+                                class="btn btn-primary mb-6">Atualizar</button></td>
+                            <td><button type="button" @onclick="()=>DeleteUser(user.Id)"
+                                class="btn btn-primary mb-6">Deletar</button></td>
                         </tr>
                     }
                 </tbody>
@@ -55,7 +55,6 @@
     <div class="row" style="margin:10px;margin-bottom:50px">
         <div class="col"><button @onclick="GetUsers" class="btn btn-info">Atualizar Lista</button></div>
     </div>
-
 </div>
 @code{
     private string? postStatus;
@@ -66,7 +65,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         var apiName = "http://mrd34dpooly-001-site1.ftempurl.com/api/login";
         var httpResponse = await client.GetAsync(apiName);
         if (httpResponse.IsSuccessStatusCode)
@@ -89,7 +87,6 @@
             Users = JsonConvert.DeserializeObject<List<Login>>(apiConteudo);
             postStatus = "";
             StateHasChanged();
-            RefreshPage();
         }
     }
 
@@ -104,13 +101,39 @@
             var postresponse = await client.PostAsync(apiName, new StringContent(postData));
             postStatus = "Cadastro efetuado com sucesso!";
             StateHasChanged();
-            RefreshPage();
+            GetUsers();            
         }            
     }
 
     void RefreshPage()
     {
         _navigationManager.NavigateTo("/fetchdata");
+    }
+
+    private async Task DeleteUser(int id)
+    {
+        var apiName = $"http://mrd34dpooly-001-site1.ftempurl.com/api/login/{id}";
+        postStatus = "Deletando:" + id;
+        var httpResponse = await client.DeleteAsync(apiName);
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            GetUsers();
+        }
+    }
+
+    private async void UpdateUser()
+    {
+        adduser.DataCriacao = adduser.DataAtual.ToLocalTime();
+        var apiName = "http://mrd34dpooly-001-site1.ftempurl.com/api/login/{id}";
+        var httpResponse = await client.PutAsJsonAsync<Login>("http://mrd34dpooly-001-site1.ftempurl.com/api/login/{id}",adduser);
+        if(httpResponse.IsSuccessStatusCode)
+        {
+            var postData = JsonConvert.SerializeObject(adduser);
+            var postresponse = await client.PutAsync(apiName, new StringContent(postData));
+            postStatus = "Cadastro efetuado com sucesso!";
+            StateHasChanged();
+            GetUsers();            
+        }     
     }
 
 }
