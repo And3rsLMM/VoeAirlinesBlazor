@@ -1,5 +1,10 @@
-﻿<h3>Component</h3>
+﻿@page "/fetchdata/{id}"
+
+<h1>Component</h1>
+
+<h3>@Id</h3>
 
 @code {
-
+    [Parameter]
+    public string Id{ get; set; }
 }

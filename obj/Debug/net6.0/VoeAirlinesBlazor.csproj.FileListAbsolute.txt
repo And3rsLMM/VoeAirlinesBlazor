@@ -31,3 +31,8 @@ B:\Git\VoeAirlinesBlazor\obj\Debug\net6.0\VoeAirlinesBlazor.pdb
 B:\Git\VoeAirlinesBlazor\obj\Debug\net6.0\VoeAirlinesBlazor.genruntimeconfig.cache
 B:\Git\VoeAirlinesBlazor\obj\Debug\net6.0\ref\VoeAirlinesBlazor.dll
 B:\Git\VoeAirlinesBlazor\bin\Debug\net6.0\Blazored.Toast.dll
+B:\Git\VoeAirlinesBlazor\obj\Debug\net6.0\staticwebassets\msbuild.VoeAirlinesBlazor.Microsoft.AspNetCore.StaticWebAssets.props
+B:\Git\VoeAirlinesBlazor\obj\Debug\net6.0\staticwebassets\msbuild.build.VoeAirlinesBlazor.props
+B:\Git\VoeAirlinesBlazor\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.VoeAirlinesBlazor.props
+B:\Git\VoeAirlinesBlazor\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.VoeAirlinesBlazor.props
+B:\Git\VoeAirlinesBlazor\obj\Debug\net6.0\staticwebassets.pack.json
